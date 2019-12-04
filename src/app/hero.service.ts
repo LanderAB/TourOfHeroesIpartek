@@ -9,22 +9,26 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: "root"
 })
 export class HeroService {
-
+  
   private heroesUrl = 'api/heroes';  // URL to web api
-
+  
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { };
-
-  /** GET heroes from the server */
-  getHeroes(): Observable<Hero[]> {
-
-    return this.http.get<Hero[]>(this.heroesUrl)
+    
+    /** GET heroes from the server */
+    getHeroes(): Observable<Hero[]> {
+      
+      return this.http.get<Hero[]>(this.heroesUrl)
+    }
+    
+    getHero(id: number): Observable<Hero> {
+      // TODO: send the message _after_ fetching the hero
+      this.messageService.add(`HeroService: fetched hero id=${id}`);
+      return this.http.get<Hero>(`${this.heroesUrl}/${id}`);
+    }
+    updateHero(hero: Hero): Observable<any> {
+      return this.http.put(this.heroesUrl, hero);
+    }
   }
-
-  getHero(id: number): Observable<Hero> {
-    // TODO: send the message _after_ fetching the hero
-    this.messageService.add(`HeroService: fetched hero id=${id}`);
-    return of(HEROES.find(hero => hero.id === id));
-  }
-}
+  
